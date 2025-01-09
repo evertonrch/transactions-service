@@ -54,12 +54,34 @@ class TransacaoServiceTest {
     }
 
     @Test
-    void testListarTransacoes_Vazio() {
+    void testListarTransacoesVazio() {
         when(transacaoRepository.getTransacoes()).thenReturn(Collections.emptyList());
 
         List<Transacao> transacoes = transacaoService.listarTransacoes();
 
         assertNotNull(transacoes);
         assertTrue(transacoes.isEmpty());
+    }
+
+    @Test
+    void testDeletarTransacoes() {
+        transacaoRepository.deletaTransacoes();
+
+        verify(transacaoRepository, times(1)).deletaTransacoes();
+    }
+
+    @Test
+    void testDeletarTransacoesComExcecoes() {
+        String exceptionMessage = "Erro ao deletar transações";
+        doThrow(new UnsupportedOperationException(exceptionMessage))
+                .when(transacaoRepository)
+                .deletaTransacoes();
+
+        UnsupportedOperationException ex = assertThrows(UnsupportedOperationException.class, () -> {
+            transacaoRepository.deletaTransacoes();
+        });
+
+        assertEquals(exceptionMessage, ex.getMessage());
+        verify(transacaoRepository, times(1)).deletaTransacoes();
     }
 }

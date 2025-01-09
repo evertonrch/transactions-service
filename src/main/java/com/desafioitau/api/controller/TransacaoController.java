@@ -34,4 +34,11 @@ public class TransacaoController {
                 ResponseEntity.noContent().build() :
                 ResponseEntity.ok(transacoes);
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deletaTransacoes() {
+        transacaoService.deletaTransacoes();
+
+        return ResponseEntity.ok().build();
+    }
 }

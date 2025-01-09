@@ -22,4 +22,8 @@ public class TransacaoRepository {
     public List<Transacao> getTransacoes() {
         return this.transacoes;
     }
+
+    public void deletaTransacoes() {
+        transacoes.clear();
+    }
 }
