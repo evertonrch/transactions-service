@@ -2,6 +2,7 @@ package com.desafioitau.api.controller;
 
 import com.desafioitau.api.model.Transacao;
 import com.desafioitau.api.service.TransacaoService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,9 @@ public class TransacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> criaTranscao(@RequestBody Transacao transacao) {
+    public ResponseEntity<Void> criaTranscao(@RequestBody @Valid Transacao transacao) {
         transacaoService.criaTransacao(transacao);
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
