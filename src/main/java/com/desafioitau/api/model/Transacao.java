@@ -15,4 +15,12 @@ public class Transacao {
     public OffsetDateTime getDataHora() {
         return dataHora;
     }
+
+    public void setValor(BigDecimal valor) {
+        this.valor = valor;
+    }
+
+    public void setDataHora(OffsetDateTime dataHora) {
+        this.dataHora = dataHora;
+    }
 }

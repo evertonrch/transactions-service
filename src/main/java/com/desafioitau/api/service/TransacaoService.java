@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class TranscaoService {
+public class TransacaoService {
 
     private final TransacaoRepository transacaoRepository;
 
-    public TranscaoService(TransacaoRepository transacaoRepository) {
+    public TransacaoService(TransacaoRepository transacaoRepository) {
         this.transacaoRepository = transacaoRepository;
     }
 
@@ -19,9 +19,7 @@ public class TranscaoService {
         transacaoRepository.add(transacao);
     }
 
-    public List<Transacao> listaTransacoes() {
+    public List<Transacao> listarTransacoes() {
         return transacaoRepository.getTransacoes();
     }
-
-
 }

@@ -1,7 +1,7 @@
 package com.desafioitau.api.controller;
 
 import com.desafioitau.api.model.Transacao;
-import com.desafioitau.api.service.TranscaoService;
+import com.desafioitau.api.service.TransacaoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,21 +12,21 @@ import java.util.List;
 @RequestMapping("/transacao")
 public class TransacaoController {
 
-    private final TranscaoService transcaoService;
+    private final TransacaoService transacaoService;
 
-    public TransacaoController(TranscaoService transcaoService) {
-        this.transcaoService = transcaoService;
+    public TransacaoController(TransacaoService transacaoService) {
+        this.transacaoService = transacaoService;
     }
 
     @PostMapping
     public ResponseEntity<Void> criaTranscao(@RequestBody Transacao transacao) {
-        transcaoService.criaTransacao(transacao);
+        transacaoService.criaTransacao(transacao);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<Transacao>> listaTransacoes() {
-        List<Transacao> transacoes = transcaoService.listaTransacoes();
+        List<Transacao> transacoes = transacaoService.listarTransacoes();
 
         return transacoes.isEmpty() ?
                 ResponseEntity.noContent().build() :
