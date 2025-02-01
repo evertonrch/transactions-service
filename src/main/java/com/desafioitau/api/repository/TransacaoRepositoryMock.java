@@ -4,26 +4,23 @@ import com.desafioitau.api.model.Transacao;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
-public class TransacaoRepository {
+public class TransacaoRepositoryMock {
 
-    private final List<Transacao> transacoes;
+    private final List<Transacao> transacoes = new ArrayList<>();
 
-    public TransacaoRepository() {
-        this.transacoes = new ArrayList<>();
-    }
-
-    public void add(Transacao transacao) {
+    public void save(Transacao transacao) {
         this.transacoes.add(transacao);
     }
 
     public List<Transacao> getTransacoes() {
-        return this.transacoes;
+        return Collections.unmodifiableList(transacoes);
     }
 
     public void deletaTransacoes() {
-        transacoes.clear();
+        this.transacoes.clear();
     }
 }

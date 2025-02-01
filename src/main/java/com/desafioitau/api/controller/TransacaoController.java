@@ -1,5 +1,6 @@
 package com.desafioitau.api.controller;
 
+import com.desafioitau.api.dto.TransacaoRequest;
 import com.desafioitau.api.model.Transacao;
 import com.desafioitau.api.service.TransacaoService;
 import jakarta.validation.Valid;
@@ -20,8 +21,8 @@ public class TransacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> criaTranscao(@RequestBody @Valid Transacao transacao) {
-        transacaoService.criaTransacao(transacao);
+    public ResponseEntity<Void> criaTransacao(@RequestBody @Valid TransacaoRequest request) {
+        transacaoService.criaTransacao(request);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
