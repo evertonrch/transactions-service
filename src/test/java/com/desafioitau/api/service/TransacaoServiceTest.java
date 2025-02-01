@@ -1,7 +1,9 @@
 package com.desafioitau.api.service;
 
+import com.desafioitau.api.dto.EstatisticaResponse;
+import com.desafioitau.api.dto.TransacaoRequest;
 import com.desafioitau.api.model.Transacao;
-import com.desafioitau.api.repository.TransacaoRepository;
+import com.desafioitau.api.repository.TransacaoRepositoryMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +16,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,27 +28,25 @@ class TransacaoServiceTest {
     @InjectMocks
     private TransacaoService transacaoService;
     @Mock
-    private TransacaoRepository transacaoRepository;
+    private TransacaoRepositoryMock repositoryMock;
 
     @Test
     void testCriaTransacao() {
-        Transacao transacao = new Transacao();
-        transacao.setValor(new BigDecimal("123.0"));
-        transacao.setDataHora(OffsetDateTime.now());
+        BigDecimal valor = new BigDecimal("123.0");
+        OffsetDateTime horaTransacao = OffsetDateTime.now();
+        TransacaoRequest request = new TransacaoRequest(valor, horaTransacao);
 
-        transacaoService.criaTransacao(transacao);
+        transacaoService.criaTransacao(request);
 
-        verify(transacaoRepository, times(1)).add(transacao);
+        verify(repositoryMock, times(1)).save(any(Transacao.class));
     }
 
     @Test
     void testListarTransacoes() {
-        Transacao transacao1 = new Transacao();
-        transacao1.setValor(new BigDecimal("123.0"));
-        Transacao transacao2 = new Transacao();
-        transacao2.setValor(new BigDecimal("456.0"));
+        Transacao transacao1 = new Transacao(new BigDecimal("123.0"), OffsetDateTime.now());
+        Transacao transacao2 = new Transacao(new BigDecimal("456.0"), OffsetDateTime.now());
 
-        when(transacaoRepository.getTransacoes()).thenReturn(Arrays.asList(transacao1, transacao2));
+        when(repositoryMock.getTransacoes()).thenReturn(Arrays.asList(transacao1, transacao2));
 
         List<Transacao> transacoes = transacaoService.listarTransacoes();
 
@@ -55,7 +58,7 @@ class TransacaoServiceTest {
 
     @Test
     void testListarTransacoesVazio() {
-        when(transacaoRepository.getTransacoes()).thenReturn(Collections.emptyList());
+        when(repositoryMock.getTransacoes()).thenReturn(Collections.emptyList());
 
         List<Transacao> transacoes = transacaoService.listarTransacoes();
 
@@ -65,23 +68,61 @@ class TransacaoServiceTest {
 
     @Test
     void testDeletarTransacoes() {
-        transacaoRepository.deletaTransacoes();
+        repositoryMock.deletaTransacoes();
 
-        verify(transacaoRepository, times(1)).deletaTransacoes();
+        verify(repositoryMock, times(1)).deletaTransacoes();
     }
 
     @Test
     void testDeletarTransacoesComExcecoes() {
         String exceptionMessage = "Erro ao deletar transações";
         doThrow(new UnsupportedOperationException(exceptionMessage))
-                .when(transacaoRepository)
+                .when(repositoryMock)
                 .deletaTransacoes();
 
         UnsupportedOperationException ex = assertThrows(UnsupportedOperationException.class, () -> {
-            transacaoRepository.deletaTransacoes();
+            repositoryMock.deletaTransacoes();
         });
 
         assertEquals(exceptionMessage, ex.getMessage());
-        verify(transacaoRepository, times(1)).deletaTransacoes();
+        verify(repositoryMock, times(1)).deletaTransacoes();
+    }
+
+    @Test
+    void testGetEstatisticaComTransacoesRecentes() {
+        Transacao t1 = new Transacao(new BigDecimal("100.0"), OffsetDateTime.now().minusSeconds(30));
+        Transacao t2 = new Transacao(new BigDecimal("200.0"), OffsetDateTime.now().minusSeconds(10));
+        List<Transacao> transacoes = List.of(t1, t2);
+
+        when(repositoryMock.getTransacoes()).thenReturn(transacoes);
+
+        EstatisticaResponse response = transacaoService.getEstatistica();
+
+        assertThat(response.getCount(), is(2L));
+        assertThat(response.getSum(), is(300.0));
+        assertThat(response.getAvg(), is(150.0));
+        assertThat(response.getMax(), is(200.0));
+        assertThat(response.getMin(), is(100.0));
+
+        verify(repositoryMock, times(1)).getTransacoes();
+    }
+
+    @Test
+    void testGetEstatisticaSemTransacoesRecentes() {
+        Transacao t1 = new Transacao(new BigDecimal("50.0"), OffsetDateTime.now().minusSeconds(70));
+        Transacao t2 = new Transacao(new BigDecimal("150.0"), OffsetDateTime.now().minusSeconds(120));
+        List<Transacao> transacoes = List.of(t1, t2);
+
+        when(repositoryMock.getTransacoes()).thenReturn(transacoes);
+
+        EstatisticaResponse response = transacaoService.getEstatistica();
+
+        assertThat(response.getCount(), is(0L));
+        assertThat(response.getSum(), is(0.0));
+        assertThat(response.getAvg(), is(0.0));
+        assertThat(response.getMax(), is(0.0));
+        assertThat(response.getMin(), is(0.0));
+
+        verify(repositoryMock, times(1)).getTransacoes();
     }
 }
