@@ -40,8 +40,9 @@ class TransacaoControllerTest {
 
     @BeforeEach
     void init() {
-        ValidatorFactory factory = buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        try(ValidatorFactory factory = buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
     }
 
     @Test
