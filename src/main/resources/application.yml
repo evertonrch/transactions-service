@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: transacoes-api
+
+  jackson:
+    time-zone: America/Sao_Paulo
