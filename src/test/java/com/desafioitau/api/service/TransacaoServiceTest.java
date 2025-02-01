@@ -51,9 +51,9 @@ class TransacaoServiceTest {
         List<Transacao> transacoes = transacaoService.listarTransacoes();
 
         assertNotNull(transacoes);
-        assertEquals(2, transacoes.size());
-        assertEquals(transacao1, transacoes.get(0));
-        assertEquals(transacao2, transacoes.get(1));
+        assertEquals(transacoes.size(), 2);
+        assertEquals(transacoes.get(0), transacao1);
+        assertEquals(transacoes.get(1), transacao2);
     }
 
     @Test
@@ -84,7 +84,7 @@ class TransacaoServiceTest {
             repositoryMock.deletaTransacoes();
         });
 
-        assertEquals(exceptionMessage, ex.getMessage());
+        assertEquals(ex.getMessage(), exceptionMessage);
         verify(repositoryMock, times(1)).deletaTransacoes();
     }
 
