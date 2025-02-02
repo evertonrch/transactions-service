@@ -4,3 +4,10 @@ spring:
 
   jackson:
     time-zone: America/Sao_Paulo
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+    tryItOutEnabled: false
