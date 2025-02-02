@@ -1,5 +1,3 @@
-mvn*
-.mvn/
 .gitattributes
 HELP.md
 target/
