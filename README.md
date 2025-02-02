@@ -1,4 +1,4 @@
-# API de Transações
+# :credit_card: API de Transações
 
 ## Descrição
 Esta é uma API REST que permite o registro de transações financeiras com valor e data/hora, bem como a consulta de estatísticas das transações realizadas nos últimos 60 segundos. 
