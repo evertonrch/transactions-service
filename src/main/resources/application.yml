@@ -10,4 +10,4 @@ springdoc:
     path: /swagger-ui.html
     operationsSorter: method
     tagsSorter: alpha
-    tryItOutEnabled: false
+    tryItOutEnabled: true
